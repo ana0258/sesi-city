@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Sesi City - RPG Educacional</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #004d40, #00796b);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    #game {
+      max-width: 700px;
+      margin: auto;
+      background: rgba(0,0,0,0.7);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0px 0px 15px #000;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+    .question {
+      font-size: 20px;
+      margin: 20px 0;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 12px;
+      font-size: 16px;
+      background: #26a69a;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .options button:hover {
+      background: #004d40;
+    }
+    #result {
+      font-size: 22px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <h1>🌍 Sesi City - RPG COP-30</h1>
+    <p id="phase">Fase 1 de 15</p>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "Qual foi a principal causa da tragédia de Nova Friburgo em 2011?",
+        options: ["Queimadas", "Chuvas intensas e deslizamentos", "Seca extrema", "Atividade vulcânica"],
+        answer: 1
+      },
+      {
+        q: "A COP-30 será sediada em qual cidade brasileira?",
+        options: ["Rio de Janeiro", "Belém", "São Paulo", "Brasília"],
+        answer: 1
+      },
+      {
+        q: "Em 2011, quantas pessoas aproximadamente perderam a vida na tragédia da Região Serrana do RJ?",
+        options: ["Cerca de 100", "Mais de 900", "Cerca de 50", "Mais de 5000"],
+        answer: 1
+      },
+      {
+        q: "Qual gás é o principal responsável pelo efeito estufa intensificado?",
+        options: ["Oxigênio", "Hidrogênio", "Dióxido de Carbono (CO₂)", "Nitrogênio"],
+        answer: 2
+      },
+      {
+        q: "O que significa o termo 'resiliência climática'?",
+        options: [
+          "Capacidade de resistir a guerras",
+          "Capacidade de adaptação e recuperação diante de impactos climáticos",
+          "Técnica de plantar árvores",
+          "Estratégia de urbanização"
+        ],
+        answer: 1
+      },
+      {
+        q: "A tragédia de 2011 em Nova Friburgo foi considerada:",
+        options: [
+          "O maior desastre natural do Brasil até então",
+          "Um evento raro sem precedentes",
+          "Uma enchente comum",
+          "Um fenômeno causado por tsunami"
+        ],
+        answer: 0
+      },
+      {
+        q: "Qual o objetivo principal da COP-30?",
+        options: [
+          "Promover turismo sustentável",
+          "Debater acordos climáticos globais para reduzir emissões",
+          "Discutir apenas a energia solar",
+          "Definir limites de pesca"
+        ],
+        answer: 1
+      },
+      {
+        q: "As chuvas de 2011 na Região Serrana do RJ foram agravadas por:",
+        options: [
+          "Falta de energia elétrica",
+          "Desmatamento e ocupação irregular do solo",
+          "Construção de represas",
+          "Exploração de petróleo"
+        ],
+        answer: 1
+      },
+      {
+        q: "Qual documento global foi criado na Rio-92 e discutido novamente nas COPs?",
+        options: ["Protocolo de Kyoto", "Agenda 21", "Tratado de Tordesilhas", "Acordo de Paris"],
+        answer: 1
+      },
+      {
+        q: "Quantos países fazem parte da Convenção-Quadro das Nações Unidas sobre Mudança do Clima?",
+        options: ["10", "50", "197", "120"],
+        answer: 2
+      },
+      {
+        q: "O que é bioacumulação, tema discutido em sustentabilidade?",
+        options: [
+          "Acúmulo de água nas plantas",
+          "Acúmulo de poluentes nos organismos ao longo do tempo",
+          "Crescimento urbano acelerado",
+          "Aumento de florestas"
+        ],
+        answer: 1
+      },
+      {
+        q: "Na tragédia de 2011, qual foi um dos grandes desafios enfrentados pelas equipes de resgate?",
+        options: [
+          "Falta de internet",
+          "Áreas isoladas devido a deslizamentos de terra",
+          "Baixas temperaturas",
+          "Falta de oxigênio"
+        ],
+        answer: 1
+      },
+      {
+        q: "Qual acordo internacional substituiu o Protocolo de Kyoto?",
+        options: ["Acordo de Paris", "Agenda 21", "Carta da Terra", "Pacto Verde Europeu"],
+        answer: 0
+      },
+      {
+        q: "O que caracteriza um evento climático extremo?",
+        options: [
+          "Eventos previstos e regulares",
+          "Eventos raros e de grande intensidade, como enchentes e secas extremas",
+          "Variações normais de temperatura",
+          "Chuvas leves de verão"
+        ],
+        answer: 1
+      },
+      {
+        q: "Qual lição a tragédia de Nova Friburgo trouxe para a gestão ambiental urbana?",
+        options: [
+          "A importância de áreas de lazer",
+          "A necessidade de planejamento urbano e prevenção de riscos",
+          "A substituição de energia elétrica",
+          "A priorização de obras estéticas"
+        ],
+        answer: 1
+      }
+    ];
+
+    let current = 0;
+    let correct = 0;
+    let wrong = 0;
+
+    function loadQuestion() {
+      if (current < questions.length) {
+        document.getElementById("phase").innerText = `Fase ${current + 1} de 15`;
+        document.getElementById("question").innerText = questions[current].q;
+        const optionsDiv = document.getElementById("options");
+        optionsDiv.innerHTML = "";
+        questions[current].options.forEach((opt, index) => {
+          const btn = document.createElement("button");
+          btn.innerText = opt;
+          btn.onclick = () => checkAnswer(index);
+          optionsDiv.appendChild(btn);
+        });
+      } else {
+        endGame();
+      }
+    }
+
+    function checkAnswer(selected) {
+      if (selected === questions[current].answer) {
+        correct++;
+      } else {
+        wrong++;
+      }
+      current++;
+      loadQuestion();
+    }
+
+    function endGame() {
+      document.getElementById("phase").innerText = "Fim de Jogo!";
+      document.getElementById("question").innerText = "";
+      document.getElementById("options").innerHTML = "";
+      document.getElementById("result").innerHTML =
+        `✅ Acertos: ${correct}<br>❌ Erros: ${wrong}`;
+    }
+
+    loadQuestion();
+    function endGame() {
+  document.getElementById("phase").innerText = "Fim de Jogo!";
+  document.getElementById("question").innerText = "";
+  document.getElementById("options").innerHTML = "";
+
+  let objetivo = correct >= 10 
+    ? "🏆 Parabéns! Você atingiu o objetivo e se tornou um Guardião de Sesi City!" 
+    : "⚠️ Você não atingiu o objetivo. Continue treinando para proteger Sesi City!";
+
+  document.getElementById("result").innerHTML =
+    `✅ Acertos: ${correct}<br>❌ Erros: ${wrong}<br><br>${objetivo}`;
+}
+  </script>
+</body>
+</html>
